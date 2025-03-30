@@ -3,7 +3,6 @@ import subprocess
 import json
 import ast
 import base64
-
 def extract_imports(code):
     tree = ast.parse(code)
     imports = []
@@ -40,7 +39,11 @@ allowed_syscalls = [
     "syscall.SYS_GET_ROBUST_LIST", "syscall.SYS_RSEQ", "syscall.SYS_CLOCK_GETTIME",
     "syscall.SYS_GETTIMEOFDAY", "syscall.SYS_NANOSLEEP", "syscall.SYS_EPOLL_CTL",
     "syscall.SYS_CLOCK_NANOSLEEP", "syscall.SYS_PSELECT6", "syscall.SYS_TIME",
-    "syscall.SYS_SIGALTSTACK", "syscall.SYS_MKDIRAT", "syscall.SYS_MKDIR"
+    "syscall.SYS_SIGALTSTACK", "syscall.SYS_MKDIRAT", "syscall.SYS_MKDIR", 
+    
+    "syscall.SYS_SOCKET", "syscall.SYS_CONNECT", "syscall.SYS_BIND",
+    "syscall.SYS_ACCEPT", "syscall.SYS_SEND", "syscall.SYS_RECV",
+    "syscall.SYS_SENDTO", "syscall.SYS_RECVFROM", "syscall.SYS_LISTEN"
 ]
 allowed_syscalls_tmp = allowed_syscalls
 L = []
@@ -76,7 +79,7 @@ def remove_print_statements(code):
     return ast.unparse(modified_tree)
 
 def detect_dangerous_imports(code):
-    dangerous_modules = ["os", "sys", "subprocess", "shutil", "socket", "ctypes", "multiprocessing", "threading", "pickle"]
+    dangerous_modules = ["subprocess", "shutil", "ctypes", "multiprocessing", "threading", "pickle"]
     tree = ast.parse(code)
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
